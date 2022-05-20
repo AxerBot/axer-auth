@@ -23,8 +23,9 @@ export default new Schema({
     default: {
       enable: false,
       channel: "",
-      message: "",
-      emoji: "",
+      message:
+        "Hi {member}! Welcome to the server, to get access to the channels, react with :white_check_mark:",
+      emoji: "✅",
       targets: {
         username: true,
         default_roles: [],
