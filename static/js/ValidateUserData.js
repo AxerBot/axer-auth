@@ -17,7 +17,7 @@ const _f = () => {
     .then((r) => {
       if (r.status != 200) return alert(r.message);
 
-      alert("SEXOOOOO");
+      alert("You are verified!");
     });
 };
 

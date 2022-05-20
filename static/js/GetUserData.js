@@ -13,7 +13,7 @@ const _f = () => {
       localStorage["targetVerification"] = JSON.stringify(r.data);
 
       window.location.href =
-        "https://osu.ppy.sh/oauth/authorize?response_type=code&redirect_uri=http://localhost:3000/validate&client_id=14932&scope=identify";
+        "https://osu.ppy.sh/oauth/authorize?response_type=code&redirect_uri=https://axer-auth.herokuapp.com/validate&client_id=14932&scope=identify";
     });
 };
 
