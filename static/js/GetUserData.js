@@ -2,13 +2,26 @@ const _f = () => {
   const code = new URLSearchParams(window.location.search).get("code");
   const user = new URLSearchParams(window.location.search).get("user");
 
-  if (!code) return alert("Invalid code provided!");
-  if (!user) return alert("Invalid user provided!");
+  if (!code) {
+    return (document.getElementById(
+      "status"
+    ).innerHTML = `<h1 class="error">Invalid code provided!</h1>`);
+  }
+
+  if (!user) {
+    return (document.getElementById(
+      "status"
+    ).innerHTML = `<h1 class="error">Invalid user provided!</h1>`);
+  }
 
   fetch(`/getVerification/${user}/${code}`)
     .then((r) => r.json())
     .then((r) => {
-      if (r.status != 200) return alert(r.message);
+      if (r.status != 200) {
+        return (document.getElementById(
+          "status"
+        ).innerHTML = `<h1 class="error">${r.message}</h1>`);
+      }
 
       localStorage["targetVerification"] = JSON.stringify(r.data);
 

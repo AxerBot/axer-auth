@@ -2,7 +2,11 @@ const _f = () => {
   const code = new URLSearchParams(window.location.search).get("code");
   const userCredentials = JSON.parse(localStorage["targetVerification"]);
 
-  if (!code) return alert("Invalid code provided!");
+  if (!code) {
+    return (document.getElementById(
+      "status"
+    ).innerHTML = `<h1 class="error">Invalid code provided!</h1>`);
+  }
 
   fetch(
     `/validateUser/${userCredentials.user}/${userCredentials.guild}?code=${code}`,
@@ -15,9 +19,15 @@ const _f = () => {
   )
     .then((r) => r.json())
     .then((r) => {
-      if (r.status != 200) return alert(r.message);
+      if (r.status != 200) {
+        return (document.getElementById(
+          "status"
+        ).innerHTML = `<h1 class="error">${r.message}</h1>`);
+      }
 
-      alert("You are verified!");
+      document.getElementById(
+        "status"
+      ).innerHTML = `<h1 class="success">You are verified!</h1>`;
     });
 };
 
