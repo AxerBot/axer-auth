@@ -76,7 +76,7 @@ export default async (user: any, _guild: string, _member: string) => {
 
     const dm = await member.createDM();
     const embed = new MessageEmbed({
-      title: `✅ You are verified, ${member.user.username}!`,
+      title: `✅ You are verified, ${user.username}!`,
       description: `Welcome to **${guild.name}**!`,
       color: "#07f472",
     });

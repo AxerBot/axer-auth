@@ -27,7 +27,7 @@ const _f = () => {
 
       // !!!  Change this url to your oauth url
       window.location.href =
-        "https://osu.ppy.sh/oauth/authorize?response_type=code&redirect_uri=https://axer-auth.herokuapp.com/validate&client_id=14935&scope=identify";
+        "https://osu.ppy.sh/oauth/authorize?response_type=code&redirect_uri=https://axer-auth.herokuapp.com/validate&client_id=14940&scope=identify";
     });
 };
 
