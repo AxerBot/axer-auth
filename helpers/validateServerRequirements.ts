@@ -29,7 +29,9 @@ export default async (user: any, _guild: string, _member: string) => {
       };
 
     if (guild_db.verification.targets.username) {
-      member.edit({ nick: user.username }, "AxerBot Verification System"); // ? Sync username to osu! username
+      member
+        .edit({ nick: user.username }, "AxerBot Verification System")
+        .catch(console.error); // ? Sync username to osu! username
     }
 
     for (const _role of guild_db.verification.targets.default_roles) {
@@ -42,7 +44,7 @@ export default async (user: any, _guild: string, _member: string) => {
       }
     }
 
-    const usergroups = ["DEV", "SPT", "NAT", "BN", "BNP", "GMT", "LVD", "ALM"];
+    const usergroups = ["DEV", "SPT", "NAT", "BN", "PBN", "GMT", "LVD", "ALM"];
 
     usergroups.forEach((group) => {
       guild_db.verification.targets.group_roles
@@ -52,7 +54,7 @@ export default async (user: any, _guild: string, _member: string) => {
 
           if (!role) return;
 
-          if (group == "BNP") {
+          if (group == "PBN") {
             if (
               user.groups.find(
                 (g: any) => g.short_name == group && g.is_probationary

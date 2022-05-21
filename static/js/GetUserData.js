@@ -25,6 +25,7 @@ const _f = () => {
 
       localStorage["targetVerification"] = JSON.stringify(r.data);
 
+      // !!!  Change this url to your oauth url
       window.location.href =
         "https://osu.ppy.sh/oauth/authorize?response_type=code&redirect_uri=https://axer-auth.herokuapp.com/validate&client_id=14935&scope=identify";
     });
