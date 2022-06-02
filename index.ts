@@ -9,7 +9,7 @@ import path from "path";
 dotenv.config();
 import getVerification from "./helpers/getVerification";
 import validateUser from "./helpers/validateUser";
-import "./discordClient";
+import ".";
 
 const bot = new Client({
   intents: [
