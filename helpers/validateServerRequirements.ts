@@ -1,6 +1,6 @@
 import { MessageEmbed } from "discord.js";
 import { guilds } from "../database";
-import bot from "../discordClient";
+import bot from "..";
 
 export default async (user: any, _guild: string, _member: string) => {
   try {
