@@ -35,12 +35,16 @@ export default async (user: any, _guild: string, _member: string) => {
     }
 
     for (const _role of guild_db.verification.targets.default_roles) {
-      const role = guild.roles.cache.get(_role);
+      try {
+        const role = await guild.roles.fetch(_role);
 
-      if (role) {
-        member.roles.add(role).catch((e) => {
-          console.error(e);
-        });
+        if (role) {
+          member.roles.add(role).catch((e) => {
+            console.error(e);
+          });
+        }
+      } catch (e) {
+        console.error(e);
       }
     }
 
