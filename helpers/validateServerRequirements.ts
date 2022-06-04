@@ -74,14 +74,18 @@ export default async (user: any, _guild: string, _member: string) => {
         });
     });
 
-    const dm = await member.createDM();
     const embed = new MessageEmbed({
       title: `✅ You are verified, ${user.username}!`,
       description: `Welcome to **${guild.name}**!`,
       color: "#07f472",
     });
 
-    dm.send({
+    const guild_channel: any = await guild.client.channels.fetch(
+      guild_db.verification.channel
+    );
+
+    guild_channel.send({
+      content: `<@${member.id}>`,
       embeds: [embed],
     });
 
