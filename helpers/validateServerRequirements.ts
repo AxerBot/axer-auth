@@ -4,7 +4,7 @@ import bot from "..";
 
 export default async (user: any, _guild: string, _member: string) => {
   try {
-    const guild = bot.guilds.cache.get(_guild);
+    const guild = await bot.guilds.fetch(_guild);
 
     if (!guild)
       return {
@@ -39,7 +39,7 @@ export default async (user: any, _guild: string, _member: string) => {
         const role = await guild.roles.fetch(_role);
 
         if (role) {
-          member.roles.add(role).catch((e) => {
+          await member.roles.add(role).catch((e) => {
             console.error(e);
           });
         }
@@ -49,6 +49,61 @@ export default async (user: any, _guild: string, _member: string) => {
     }
 
     const usergroups = ["DEV", "SPT", "NAT", "BN", "PBN", "GMT", "LVD", "ALM"];
+
+    for (const target_role of guild_db.verification.targets.group_roles) {
+      const role = await guild.roles.fetch(target_role.id);
+
+      if (role) {
+        // ? Add probationary bn role
+        if (
+          target_role.group == "PBN" &&
+          user.groups.find(
+            (g: any) => g.short_name == "BN" && g.is_probationary
+          )
+        ) {
+          // ? Check the group modes
+          if (target_role.modes) {
+            const target_group = user.groups.find(
+              (g: any) => g.short_name == "BN" && g.is_probationary
+            );
+
+            let allow_add = false;
+
+            target_role.modes.forEach((mode: string) => {
+              if (target_group.modes.includes(mode)) allow_add = true;
+            });
+
+            if (allow_add) await member.roles.add(role);
+          } else {
+            const target_group = user.groups.find(
+              (g: any) => g.short_name == target_role.group
+            );
+
+            if (target_group) await member.roles.add(role);
+          }
+        } else {
+          if (target_role.modes) {
+            const target_group = user.groups.find(
+              (g: any) => g.short_name == target_role.group
+            );
+
+            let allow_add = false;
+
+            target_role.modes.forEach((mode: string) => {
+              if (target_group.modes.includes(mode)) allow_add = true;
+            });
+
+            if (allow_add) await member.roles.add(role);
+          } else {
+            const target_group = user.groups.find(
+              (g: any) => g.short_name == target_role.group
+            );
+
+            if (target_group) await member.roles.add(role);
+          }
+        }
+      }
+    }
 
     usergroups.forEach((group) => {
       guild_db.verification.targets.group_roles
