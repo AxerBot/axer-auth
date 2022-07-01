@@ -65,30 +65,16 @@ export default async (user: any, _guild: string, _member: string) => {
         // * ======= Add by modes if exists
         if (TargetUserUserGroup && role.modes.length != 0) {
           // * ===== Parse gamemodes and update AllowAddRole
-          TargetUserUserGroup.playmodes.forEach((mode: string) => {
-            if (role.modes.includes("none")) {
-              if (TargetUserUserGroup.playmodes.length != 0)
-                AllowAddRole = false;
-            } else {
-              if (!role.modes.includes(mode.toLowerCase())) {
-                AllowAddRole = false;
-              }
-            }
-          });
-        }
 
-        if (TargetUserUserGroup && role.modes.includes("none")) {
-          // * ===== Parse gamemodes and update AllowAddRole
-          TargetUserUserGroup.playmodes.forEach((mode: string) => {
-            if (role.modes.includes("none")) {
-              if (TargetUserUserGroup.playmodes.length != 0)
-                AllowAddRole = false;
-            } else {
+          if (TargetUserUserGroup.playmodes.length == 0) {
+            if (!role.modes.includes("none")) AllowAddRole = false;
+          } else {
+            TargetUserUserGroup.playmodes.forEach((mode: string) => {
               if (!role.modes.includes(mode.toLowerCase())) {
                 AllowAddRole = false;
               }
-            }
-          });
+            });
+          }
         }
 
         // ? Finally, add the role
@@ -117,26 +103,16 @@ export default async (user: any, _guild: string, _member: string) => {
         // * ======= Add by modes if exists
         if (TargetUserUserGroup && role.modes.length != 0) {
           // * ===== Parse gamemodes and update AllowAddRole
-          TargetUserUserGroup.playmodes.forEach((mode: string) => {
-            if (
-              !role.modes.includes(mode.toLowerCase()) &&
-              TargetUserUserGroup.playmodes.length != 0
-            ) {
-              AllowAddRole = false;
-            } else if (
-              role.modes.includes("none") &&
-              TargetUserUserGroup.playmodes.length != 0
-            ) {
-              AllowAddRole = false;
-            }
-          });
-        }
 
-        if (TargetUserUserGroup && role.modes.includes("none")) {
-          // * ===== Parse gamemodes and update AllowAddRole
-          TargetUserUserGroup.playmodes.forEach((mode: string) => {
-            if (TargetUserUserGroup.playmodes.length > 0) AllowAddRole = false;
-          });
+          if (TargetUserUserGroup.playmodes.length == 0) {
+            if (!role.modes.includes("none")) AllowAddRole = false;
+          } else {
+            TargetUserUserGroup.playmodes.forEach((mode: string) => {
+              if (!role.modes.includes(mode.toLowerCase())) {
+                AllowAddRole = false;
+              }
+            });
+          }
         }
 
         // ? Finally, add the role
