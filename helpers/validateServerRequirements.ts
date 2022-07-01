@@ -66,7 +66,22 @@ export default async (user: any, _guild: string, _member: string) => {
         if (TargetUserUserGroup && role.modes.length != 0) {
           // * ===== Parse gamemodes and update AllowAddRole
           TargetUserUserGroup.playmodes.forEach((mode: string) => {
-            if (!role.modes.includes(mode.toLowerCase())) AllowAddRole = false;
+            if (
+              !role.modes.includes(mode.toLowerCase()) &&
+              TargetUserUserGroup.playmodes.length != 0
+            )
+              AllowAddRole = false;
+          });
+        }
+
+        if (TargetUserUserGroup && role.modes[0] == "none") {
+          // * ===== Parse gamemodes and update AllowAddRole
+          TargetUserUserGroup.playmodes.forEach((mode: string) => {
+            if (
+              !role.modes.includes(mode.toLowerCase()) &&
+              TargetUserUserGroup.playmodes.length == 0
+            )
+              AllowAddRole = false;
           });
         }
 
@@ -97,7 +112,22 @@ export default async (user: any, _guild: string, _member: string) => {
         if (TargetUserUserGroup && role.modes.length != 0) {
           // * ===== Parse gamemodes and update AllowAddRole
           TargetUserUserGroup.playmodes.forEach((mode: string) => {
-            if (!role.modes.includes(mode.toLowerCase())) AllowAddRole = false;
+            if (
+              !role.modes.includes(mode.toLowerCase()) &&
+              TargetUserUserGroup.playmodes.length != 0
+            )
+              AllowAddRole = false;
+          });
+        }
+
+        if (TargetUserUserGroup && role.modes[0] == "none") {
+          // * ===== Parse gamemodes and update AllowAddRole
+          TargetUserUserGroup.playmodes.forEach((mode: string) => {
+            if (
+              !role.modes.includes(mode.toLowerCase()) &&
+              TargetUserUserGroup.playmodes.length == 0
+            )
+              AllowAddRole = false;
           });
         }
 
