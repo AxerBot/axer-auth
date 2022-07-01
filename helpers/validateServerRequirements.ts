@@ -105,7 +105,11 @@ export default async (user: any, _guild: string, _member: string) => {
         let AllowAddRole = true; // ? If the usergroup modes array has the required mode, add the role
 
         // * ======= Add by modes if exists
-        if (TargetUserUserGroup && role.modes.length != 0) {
+        if (
+          TargetUserUserGroup &&
+          role.modes.length != 0 &&
+          !role.modes.includes("none")
+        ) {
           // * ===== Parse gamemodes and update AllowAddRole
           TargetUserUserGroup.playmodes.forEach((mode: string) => {
             if (
