@@ -77,6 +77,8 @@ export default async (user: any, _guild: string, _member: string) => {
           }
         }
 
+        if (user.groups.length == 0) AllowAddRole = false;
+
         // ? Finally, add the role
         if (AllowAddRole && GroupRole) {
           await member.roles.add(GroupRole);
@@ -114,6 +116,8 @@ export default async (user: any, _guild: string, _member: string) => {
             });
           }
         }
+
+        if (user.groups.length == 0) AllowAddRole = false;
 
         // ? Finally, add the role
         if (AllowAddRole && GroupRole) {
