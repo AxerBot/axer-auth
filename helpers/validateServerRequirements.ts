@@ -77,11 +77,7 @@ export default async (user: any, _guild: string, _member: string) => {
         if (TargetUserUserGroup && role.modes.includes("none")) {
           // * ===== Parse gamemodes and update AllowAddRole
           TargetUserUserGroup.playmodes.forEach((mode: string) => {
-            if (
-              !role.modes.includes(mode.toLowerCase()) &&
-              TargetUserUserGroup.playmodes.length == 0
-            )
-              AllowAddRole = false;
+            if (TargetUserUserGroup.playmodes.length > 0) AllowAddRole = false;
           });
         }
 
@@ -123,11 +119,7 @@ export default async (user: any, _guild: string, _member: string) => {
         if (TargetUserUserGroup && role.modes.includes("none")) {
           // * ===== Parse gamemodes and update AllowAddRole
           TargetUserUserGroup.playmodes.forEach((mode: string) => {
-            if (
-              !role.modes.includes(mode.toLowerCase()) &&
-              TargetUserUserGroup.playmodes.length == 0
-            )
-              AllowAddRole = false;
+            if (TargetUserUserGroup.playmodes.length > 0) AllowAddRole = false;
           });
         }
 
