@@ -65,7 +65,7 @@ export default async (user: any, _guild: string, _member: string) => {
         // * ======= Add by modes if exists
         if (TargetUserUserGroup && role.modes.length != 0) {
           // * ===== Parse gamemodes and update AllowAddRole
-          TargetUserUserGroup.modes.forEach((mode: string) => {
+          TargetUserUserGroup.playmodes.forEach((mode: string) => {
             if (!role.modes.includes(mode.toLowerCase())) AllowAddRole = false;
           });
         }
@@ -96,7 +96,7 @@ export default async (user: any, _guild: string, _member: string) => {
         // * ======= Add by modes if exists
         if (TargetUserUserGroup && role.modes.length != 0) {
           // * ===== Parse gamemodes and update AllowAddRole
-          TargetUserUserGroup.modes.forEach((mode: string) => {
+          TargetUserUserGroup.playmodes.forEach((mode: string) => {
             if (!role.modes.includes(mode.toLowerCase())) AllowAddRole = false;
           });
         }
