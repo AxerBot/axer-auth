@@ -69,7 +69,7 @@ export default async (user: any, _guild: string, _member: string) => {
             if (
               !role.modes.includes(mode.toLowerCase()) &&
               TargetUserUserGroup.playmodes.length != 0 &&
-              !role.modes.includes("none")
+              role.modes.includes("none")
             )
               AllowAddRole = false;
           });
@@ -78,7 +78,7 @@ export default async (user: any, _guild: string, _member: string) => {
         if (TargetUserUserGroup && role.modes.includes("none")) {
           // * ===== Parse gamemodes and update AllowAddRole
           TargetUserUserGroup.playmodes.forEach((mode: string) => {
-            if (TargetUserUserGroup.playmodes.length > 0) AllowAddRole = false;
+            if (TargetUserUserGroup.playmodes.length == 0) AllowAddRole = true;
           });
         }
 
@@ -106,16 +106,13 @@ export default async (user: any, _guild: string, _member: string) => {
         let AllowAddRole = true; // ? If the usergroup modes array has the required mode, add the role
 
         // * ======= Add by modes if exists
-        if (
-          TargetUserUserGroup &&
-          role.modes.length != 0 &&
-          !role.modes.includes("none")
-        ) {
+        if (TargetUserUserGroup && role.modes.length != 0) {
           // * ===== Parse gamemodes and update AllowAddRole
           TargetUserUserGroup.playmodes.forEach((mode: string) => {
             if (
               !role.modes.includes(mode.toLowerCase()) &&
-              TargetUserUserGroup.playmodes.length != 0
+              TargetUserUserGroup.playmodes.length != 0 &&
+              role.modes.includes("none")
             )
               AllowAddRole = false;
           });
@@ -124,7 +121,7 @@ export default async (user: any, _guild: string, _member: string) => {
         if (TargetUserUserGroup && role.modes.includes("none")) {
           // * ===== Parse gamemodes and update AllowAddRole
           TargetUserUserGroup.playmodes.forEach((mode: string) => {
-            if (TargetUserUserGroup.playmodes.length > 0) AllowAddRole = false;
+            if (TargetUserUserGroup.playmodes.length == 0) AllowAddRole = true;
           });
         }
 
