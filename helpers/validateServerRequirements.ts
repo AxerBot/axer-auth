@@ -69,6 +69,7 @@ export default async (user: any, _guild: string, _member: string) => {
             if (
               !role.modes.includes(mode.toLowerCase()) &&
               TargetUserUserGroup.playmodes.length != 0
+              !role.modes.includes("none")
             )
               AllowAddRole = false;
           });
