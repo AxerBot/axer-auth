@@ -37,7 +37,11 @@ bot.login(token).then(() => {
   server.get("/authorize/", (req, res) =>
     res
       .status(200)
-      .sendFile(path.resolve(__dirname.concat("/pages/SaveCredentials.html")))
+      .sendFile(
+        process.env.NODE_ENV != "production"
+          ? path.resolve(__dirname.concat("/pages/SaveCredentialsDev.html"))
+          : path.resolve(__dirname.concat("/pages/SaveCredentials.html"))
+      )
   );
 
   server.get("/getVerification/:user/:code", getVerification);
