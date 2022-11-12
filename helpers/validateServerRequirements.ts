@@ -1,4 +1,4 @@
-import { MessageEmbed } from "discord.js";
+import { MessageEmbed, Role } from "discord.js";
 import { guilds } from "../database";
 import bot from "..";
 import { User, UserGroup } from "../types/user";
@@ -42,19 +42,15 @@ export default async (user: User, _guild: string, _member: string) => {
         if (role) {
           await member.roles.add(role);
         }
-      } catch (e) {
-        console.error("adding default role", e);
+      } catch (e: any) {
+        console.error("adding default role", e.roles[0]);
       }
     }
 
     const probationaryRoles = ["PBN"];
     if (user.groups) {
       for (const group of user.groups) {
-        addRole(
-          group.short_name,
-          group,
-          probationaryRoles.includes(group.short_name)
-        );
+        addRole(group.short_name, group, group.is_probationary);
       }
     }
 
@@ -65,7 +61,7 @@ export default async (user: User, _guild: string, _member: string) => {
     ) {
       console.log(`adding ${role}`);
       const configuration = guild_db.verification.targets.group_roles.find(
-        (r: any) => r.group == role
+        (r: any) => r.group == (probationary ? `P${role}` : role)
       );
 
       if (!configuration) {
@@ -84,26 +80,18 @@ export default async (user: User, _guild: string, _member: string) => {
       }
 
       try {
-        guild.roles
-          .fetch(configuration.role, {
-            force: true,
-          })
-          .then(async (guildRole) => {
-            if (guildRole) {
-              try {
-                await member.roles.add(guildRole);
-              } catch (e) {
-                console.error(
-                  `adding guild group role ${role} ${guildRole.id}`,
-                  e
-                );
-              }
-            }
-          })
-          .catch((e) => {
-            console.error(`fetching group role ${role}`, e);
-          });
-      } catch (e) {
+        const guildRole = guild.roles.cache.get(configuration.id);
+
+        if (guildRole) {
+          try {
+            await member.roles.add(guildRole);
+          } catch (e: any) {
+            console.error(`adding guild group role ${role} ${guildRole.id}`, e);
+          }
+        } else {
+          console.log(`Role for ${role} not found`);
+        }
+      } catch (e: any) {
         console.error(`adding group role ${role}`, e);
       }
 
@@ -155,7 +143,7 @@ export default async (user: User, _guild: string, _member: string) => {
     //     if (AllowAddRole && GroupRole) {
     //       await member.roles.add(GroupRole);
     //     }
-    //   } catch (e) {
+    //   } catch (e:any) {
     //     console.error(e);
     //   }
     // }
@@ -195,7 +183,7 @@ export default async (user: User, _guild: string, _member: string) => {
     //     if (AllowAddRole && GroupRole) {
     //       await member.roles.add(GroupRole);
     //     }
-    //   } catch (e) {
+    //   } catch (e:any) {
     //     console.log(e);
     //   }
     // }

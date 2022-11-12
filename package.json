@@ -6,7 +6,8 @@
   "author": "Sebola3461",
   "license": "MIT",
   "scripts": {
-    "start": "ts-node ."
+    "start": "ts-node .",
+    "test:verification": "ts-node ./tests/testUserGrouproles.ts"
   },
   "dependencies": {
     "@types/express": "^4.17.13",
