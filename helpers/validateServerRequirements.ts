@@ -1,8 +1,9 @@
 import { MessageEmbed } from "discord.js";
 import { guilds } from "../database";
 import bot from "..";
+import { User, UserGroup } from "../types/user";
 
-export default async (user: any, _guild: string, _member: string) => {
+export default async (user: User, _guild: string, _member: string) => {
   try {
     const guild = await bot.guilds.fetch(_guild);
 
@@ -22,7 +23,7 @@ export default async (user: any, _guild: string, _member: string) => {
 
     const guild_db = await guilds.findById(guild.id);
 
-    if (guild_db == null)
+    if (!guild_db)
       return {
         status: 404,
         message: "Guild not found in db!",
@@ -39,94 +40,165 @@ export default async (user: any, _guild: string, _member: string) => {
         const role = await guild.roles.fetch(_role);
 
         if (role) {
-          await member.roles.add(role).catch((e) => {
-            console.error(e);
-          });
+          await member.roles.add(role);
         }
       } catch (e) {
-        console.error(e);
+        console.error("adding default role", e);
+      }
+    }
+
+    const probationaryRoles = ["PBN"];
+    if (user.groups) {
+      for (const group of user.groups) {
+        addRole(
+          group.short_name,
+          group,
+          probationaryRoles.includes(group.short_name)
+        );
+      }
+    }
+
+    async function addRole(
+      role: string,
+      usergroup: UserGroup,
+      probationary: boolean
+    ) {
+      console.log(`adding ${role}`);
+      const configuration = guild_db.verification.targets.group_roles.find(
+        (r: any) => r.group == role
+      );
+
+      if (!configuration) {
+        console.log(`stop on configuration ${role}`);
+        return;
+      }
+
+      if (configuration.modes.includes("none") && usergroup.has_playmodes) {
+        console.log(`stop on none playmodes ${role}`);
+        return;
+      }
+
+      if (!hasRequiredPlaymodes()) {
+        console.log(`stop on required playmodes ${role}`);
+        return;
+      }
+
+      try {
+        guild.roles
+          .fetch(configuration.role, {
+            force: true,
+          })
+          .then(async (guildRole) => {
+            if (guildRole) {
+              try {
+                await member.roles.add(guildRole);
+              } catch (e) {
+                console.error(
+                  `adding guild group role ${role} ${guildRole.id}`,
+                  e
+                );
+              }
+            }
+          })
+          .catch((e) => {
+            console.error(`fetching group role ${role}`, e);
+          });
+      } catch (e) {
+        console.error(`adding group role ${role}`, e);
+      }
+
+      function hasRequiredPlaymodes() {
+        let r = false;
+
+        if (configuration.modes.length == 0) return true;
+
+        usergroup.playmodes.forEach((m) => {
+          if (configuration.modes.includes(m)) r = true;
+        });
+
+        return r;
       }
     }
 
     // * ================= Add group roles for users not in probation
     // TODO: Typing
-    const nonProbationRoles = guild_db.verification.targets.group_roles.filter(
-      (role: any) => !["PBN"].includes(role.group)
-    );
+    // const nonProbationRoles = guild_db.verification.targets.group_roles.filter(
+    //   (role: any) => !["PBN"].includes(role.group)
+    // );
 
-    for (const role of nonProbationRoles) {
-      try {
-        const TargetUserUserGroup = user.groups.find(
-          (g: any) => g.short_name == role.group
-        );
-        const GroupRole = await guild.roles.fetch(role.id);
-        let AllowAddRole = true; // ? If the usergroup modes array has the required mode, add the role
+    // for (const role of nonProbationRoles) {
+    //   try {
+    //     const TargetUserUserGroup = user.groups.find(
+    //       (g: any) => g.short_name == role.group
+    //     );
+    //     const GroupRole = await guild.roles.fetch(role.id);
+    //     let AllowAddRole = true; // ? If the usergroup modes array has the required mode, add the role
 
-        // * ======= Add by modes if exists
-        if (TargetUserUserGroup && role.modes.length != 0) {
-          // * ===== Parse gamemodes and update AllowAddRole
+    //     // * ======= Add by modes if exists
+    //     if (TargetUserUserGroup && role.modes.length != 0) {
+    //       // * ===== Parse gamemodes and update AllowAddRole
 
-          if (TargetUserUserGroup.playmodes.length == 0) {
-            if (!role.modes.includes("none")) AllowAddRole = false;
-          } else {
-            TargetUserUserGroup.playmodes.forEach((mode: string) => {
-              if (!role.modes.includes(mode.toLowerCase())) {
-                AllowAddRole = false;
-              }
-            });
-          }
-        }
+    //       if (TargetUserUserGroup.playmodes.length == 0) {
+    //         if (!role.modes.includes("none")) AllowAddRole = false;
+    //       } else {
+    //         TargetUserUserGroup.playmodes.forEach((mode: string) => {
+    //           if (!role.modes.includes(mode.toLowerCase())) {
+    //             AllowAddRole = false;
+    //           }
+    //         });
+    //       }
+    //     }
 
-        if (user.groups.length == 0) AllowAddRole = false;
+    //     if (user.groups.length == 0) AllowAddRole = false;
 
-        // ? Finally, add the role
-        if (AllowAddRole && GroupRole) {
-          await member.roles.add(GroupRole);
-        }
-      } catch (e) {
-        console.error(e);
-      }
-    }
+    //     // ? Finally, add the role
+    //     if (AllowAddRole && GroupRole) {
+    //       await member.roles.add(GroupRole);
+    //     }
+    //   } catch (e) {
+    //     console.error(e);
+    //   }
+    // }
 
-    // * ================= Add group roles for users IN probation
-    // TODO: Typing
-    const ProbationRoles = guild_db.verification.targets.group_roles.filter(
-      (role: any) => ["PBN"].includes(role.group)
-    );
+    // // * ================= Add group roles for users IN probation
+    // // TODO: Typing
+    // const ProbationRoles = guild_db.verification.targets.group_roles.filter(
+    //   (role: any) => ["PBN"].includes(role.group)
+    // );
 
-    for (const role of ProbationRoles) {
-      try {
-        const TargetUserUserGroup = user.groups.find(
-          (g: any) => g.short_name == role.group
-        );
-        const GroupRole = await guild.roles.fetch(role.id);
-        let AllowAddRole = true; // ? If the usergroup modes array has the required mode, add the role
+    // for (const role of ProbationRoles) {
+    //   try {
+    //     const TargetUserUserGroup = user.groups.find(
+    //       (g: any) => g.short_name == role.group
+    //     );
+    //     const GroupRole = await guild.roles.fetch(role.id);
+    //     let AllowAddRole = true; // ? If the usergroup modes array has the required mode, add the role
 
-        // * ======= Add by modes if exists
-        if (TargetUserUserGroup && role.modes.length != 0) {
-          // * ===== Parse gamemodes and update AllowAddRole
+    //     // * ======= Add by modes if exists
+    //     if (TargetUserUserGroup && role.modes.length != 0) {
+    //       // * ===== Parse gamemodes and update AllowAddRole
 
-          if (TargetUserUserGroup.playmodes.length == 0) {
-            if (!role.modes.includes("none")) AllowAddRole = false;
-          } else {
-            TargetUserUserGroup.playmodes.forEach((mode: string) => {
-              if (!role.modes.includes(mode.toLowerCase())) {
-                AllowAddRole = false;
-              }
-            });
-          }
-        }
+    //       if (TargetUserUserGroup.playmodes.length == 0) {
+    //         if (!role.modes.includes("none")) AllowAddRole = false;
+    //       } else {
+    //         TargetUserUserGroup.playmodes.forEach((mode: string) => {
+    //           if (!role.modes.includes(mode.toLowerCase())) {
+    //             AllowAddRole = false;
+    //           }
+    //         });
+    //       }
+    //     }
 
-        if (user.groups.length == 0) AllowAddRole = false;
+    //     if (user.groups.length == 0) AllowAddRole = false;
 
-        // ? Finally, add the role
-        if (AllowAddRole && GroupRole) {
-          await member.roles.add(GroupRole);
-        }
-      } catch (e) {
-        console.log(e);
-      }
-    }
+    //     // ? Finally, add the role
+    //     if (AllowAddRole && GroupRole) {
+    //       await member.roles.add(GroupRole);
+    //     }
+    //   } catch (e) {
+    //     console.log(e);
+    //   }
+    // }
 
     // for (const target_role of guild_db.verification.targets.group_roles) {
     //   const role = await guild.roles.fetch(target_role.id);
