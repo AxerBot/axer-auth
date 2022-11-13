@@ -3,11 +3,12 @@
   "version": "1.0.0",
   "description": "eae",
   "main": "index.ts",
-  "author": "Sebola3461",
+  "author": "Hivie",
   "license": "MIT",
   "scripts": {
     "start": "ts-node .",
-    "test:verification": "ts-node ./tests/testUserGrouproles.ts"
+    "test:verification": "ts-node ./tests/testVerification.ts",
+    "test:verification-normal": "ts-node ./tests/testVerificationNormalUser.ts"
   },
   "dependencies": {
     "@types/express": "^4.17.13",
@@ -16,6 +17,7 @@
     "discord.js": "^13.7.0",
     "dotenv": "^16.0.1",
     "express": "^4.18.1",
+    "moment": "^2.29.4",
     "mongoose": "^6.3.4",
     "ts-node": "^10.7.0",
     "typescript": "^4.6.4",
