@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { guilds, users } from "../database";
 import fetchTokenOwner from "./fetchTokenOwner";
 import validateOsuToken from "./validateOsuToken";
-import validateServerRequirements from "./validateServerRequirements";
+import validateServerRequirements from "./discord/validateServerRequirements";
 
 export default async (req: Request, res: Response) => {
 	const user = req.params.user;

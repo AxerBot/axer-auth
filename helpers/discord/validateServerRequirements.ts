@@ -1,7 +1,8 @@
-import { guilds } from "../database";
-import bot from "..";
+import { guilds } from "../../database";
+import bot from "../..";
 import { sendVerifiedEmbed } from "./sendVerifiedEmbed";
-import { User, UserGroup } from "../types/user";
+import { User, UserGroup } from "../../types/user";
+import { sendLoggingEmbed } from "./sendLoggingEmbed";
 
 export default async (user: User, _guild: string, _member: string) => {
 	try {
@@ -105,6 +106,8 @@ export default async (user: User, _guild: string, _member: string) => {
 			function hasRequiredPlaymodes() {
 				let r = false;
 
+				if (configuration.modes.includes("none") && usergroup.playmodes.length == 0) return true;
+
 				if (configuration.modes.length == 0) return true;
 
 				usergroup.playmodes.forEach((m) => {
@@ -116,6 +119,8 @@ export default async (user: User, _guild: string, _member: string) => {
 		}
 
 		sendVerifiedEmbed(user, guild, member, guild_db);
+		sendLoggingEmbed(user,guild,member,guild_db)
+		
 
 		return {
 			status: 200,

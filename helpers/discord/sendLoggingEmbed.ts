@@ -1,10 +1,10 @@
 import { Guild, GuildMember, MessageEmbed } from "discord.js";
 import moment from "moment";
-import { User } from "./../types/user";
-import { parseTime } from "./parseTime";
-import { consoleError } from "../logger";
+import { User } from "../../types/user";
+import { parseTime } from "../parseTime";
+import { consoleError } from "../../logger";
 
-export async function sendVerifiedEmbed(
+export async function sendLoggingEmbed(
 	user: User,
 	guild: Guild,
 	member: GuildMember,
@@ -16,27 +16,6 @@ export async function sendVerifiedEmbed(
 		})
 		.join(", ");
 
-	const embed = new MessageEmbed()
-		.setTitle(`✅ You are verified, ${user.username}!`)
-		.setDescription(`Welcome to **${guild.name}**!`)
-		.addField(
-			"osu! profile",
-			`[${user.username}](https://osu.ppy.sh/users/${user.id})`,
-			true
-		)
-		.setThumbnail(user.avatar_url)
-		.setColor("#07f472");
-
-	usergroups && embed.addField("User group(s)", usergroups, true);
-
-	const verificationChannel: any = await guild.client.channels.fetch(
-		guild_db.verification.channel
-	);
-
-	verificationChannel.send({
-		content: `<@${member.id}>`,
-		embeds: [embed],
-	});
 
 	if (guild_db.logging.enabled) {
 		const logChannel: any = await guild.channels.fetch(
