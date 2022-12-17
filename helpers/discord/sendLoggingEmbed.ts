@@ -63,7 +63,7 @@ export async function sendLoggingEmbed(
 				)
 				.addField(
 					"User group(s)",
-					usergroups ? usergroups : "None",
+					usergroups ? usergroups : "-",
 					true
 				)
 				.setTimestamp();

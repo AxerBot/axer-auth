@@ -216,6 +216,8 @@ export interface UserCompactBase {
 		data?: number[];
 	};
 	ranked_beatmapset_count?: unknown;
+    guest_beatmapset_count?: number;
+    nominated_beatmapset_count?: number;
 	replays_watched_counts?: unknown;
 	scores_best_count?: number;
 	scores_first_count?: number;
