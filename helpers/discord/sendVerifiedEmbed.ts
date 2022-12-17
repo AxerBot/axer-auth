@@ -45,7 +45,7 @@ export async function sendVerifiedEmbed(
 				user.statistics?.global_rank
 					? user.statistics?.global_rank
 					: "-"
-			} (${user.statistics?.pp ? Math.round(user.statistics?.pp) : "-"} PP)
+			} (${user.statistics?.pp ? Math.round(user.statistics?.pp) : "-"}pp)
             ${getEmoji(
 				user.playmode.toString()
 			)} :flag_${user.country_code.toLowerCase()}: #${
