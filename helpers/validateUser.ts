@@ -55,7 +55,8 @@ export default async (req: Request, res: Response) => {
 		osuUser.data,
 		verification_data.guild,
 		verification_data.user,
-		code.toString()
+		code.toString(),
+		false
 	);
 
 	if (requirements.status != 200)

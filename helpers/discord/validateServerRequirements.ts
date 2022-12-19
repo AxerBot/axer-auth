@@ -151,9 +151,7 @@ export default async (
 
 				if (!user.statistics) return console.log("User without rank");
 
-				const osu = test
-					? await fetchOsuUser(r.gamemode, user.id)
-					: await fetchTokenOwner(token);
+				const osu = await fetchOsuUser(r.gamemode, user.id);
 
 				if (osu.status != 200 || !osu.data)
 					return console.log("Osu user not found!");
