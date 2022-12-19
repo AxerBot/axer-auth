@@ -3,8 +3,15 @@ import bot from "../..";
 import { sendVerifiedEmbed } from "./sendVerifiedEmbed";
 import { User, UserGroup } from "../../types/user";
 import { sendLoggingEmbed } from "./sendLoggingEmbed";
+import fetchOsuUser from "../fetchOsuUser";
 
-export default async (user: User, _guild: string, _member: string) => {
+export default async (
+	user: User,
+	_guild: string,
+	_member: string,
+	token: string,
+	test?: boolean
+) => {
 	try {
 		const guild = await bot.guilds.fetch(_guild);
 
@@ -35,6 +42,8 @@ export default async (user: User, _guild: string, _member: string) => {
 				.edit({ nick: user.username }, "AxerBot Verification System")
 				.catch(console.error); // ? Sync username to osu! username
 		}
+
+		addRankRoles();
 
 		for (const _role of guild_db.verification.targets.default_roles) {
 			try {
@@ -106,7 +115,11 @@ export default async (user: User, _guild: string, _member: string) => {
 			function hasRequiredPlaymodes() {
 				let r = false;
 
-				if (configuration.modes.includes("none") && usergroup.playmodes.length == 0) return true;
+				if (
+					configuration.modes.includes("none") &&
+					usergroup.playmodes.length == 0
+				)
+					return true;
 
 				if (configuration.modes.length == 0) return true;
 
@@ -118,9 +131,76 @@ export default async (user: User, _guild: string, _member: string) => {
 			}
 		}
 
+		/**
+		 * TODO: Typing
+		 */
+
+		function addRankRoles() {
+			const roles = guild_db.verification.targets.rank_roles;
+
+			if (!roles || roles.length == 0)
+				return console.log("Server without configuration");
+
+			roles.forEach((r: any) => execute(r));
+
+			async function execute(r: any) {
+				const role = guild.roles.cache.get(r.id);
+
+				if (!role) return console.log("Role not found!");
+
+				if (!user.statistics) return console.log("User without rank");
+
+				const osu = await fetchOsuUser(
+					token,
+					r.gamemode,
+					test ? user.id : undefined
+				);
+
+				if (osu.status != 200 || !osu.data)
+					return console.log("Osu user not found!");
+
+				const osuData: User = osu.data;
+
+				if (!osuData.statistics)
+					return console.log("User without statistics!");
+
+				if (
+					(r.type == "country" && !osuData.statistics.country_rank) ||
+					(r.type == "country" &&
+						osuData.statistics.country_rank == 0)
+				)
+					return console.log("User without valid rank (country)!");
+
+				if (
+					(r.type == "global" && !osuData.statistics.global_rank) ||
+					(r.type == "global" && osuData.statistics.global_rank == 0)
+				)
+					return console.log("User without valid rank (global)!");
+
+				try {
+					if (r.type == "global") {
+						if (
+							osuData.statistics.global_rank <= r.max_rank &&
+							osuData.statistics.global_rank >= r.min_rank
+						)
+							return member.roles.add(role);
+					}
+
+					if (r.type == "country") {
+						if (
+							osuData.statistics.country_rank <= r.max_rank &&
+							osuData.statistics.country_rank >= r.min_rank
+						)
+							return member.roles.add(role);
+					}
+				} catch (e) {
+					console.log(e);
+				}
+			}
+		}
+
 		sendVerifiedEmbed(user, guild, member, guild_db);
-		sendLoggingEmbed(user,guild,member,guild_db)
-		
+		sendLoggingEmbed(user, guild, member, guild_db);
 
 		return {
 			status: 200,

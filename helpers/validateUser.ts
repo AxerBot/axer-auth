@@ -54,7 +54,8 @@ export default async (req: Request, res: Response) => {
 	const requirements = await validateServerRequirements(
 		osuUser.data,
 		verification_data.guild,
-		verification_data.user
+		verification_data.user,
+		code.toString()
 	);
 
 	if (requirements.status != 200)
