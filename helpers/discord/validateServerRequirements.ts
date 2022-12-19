@@ -4,6 +4,7 @@ import { sendVerifiedEmbed } from "./sendVerifiedEmbed";
 import { User, UserGroup } from "../../types/user";
 import { sendLoggingEmbed } from "./sendLoggingEmbed";
 import fetchOsuUser from "../fetchOsuUser";
+import fetchTokenOwner from "../fetchTokenOwner";
 
 export default async (
 	user: User,
@@ -150,11 +151,9 @@ export default async (
 
 				if (!user.statistics) return console.log("User without rank");
 
-				const osu = await fetchOsuUser(
-					token,
-					r.gamemode,
-					test ? user.id : undefined
-				);
+				const osu = test
+					? await fetchOsuUser(r.gamemode, user.id)
+					: await fetchTokenOwner(token);
 
 				if (osu.status != 200 || !osu.data)
 					return console.log("Osu user not found!");

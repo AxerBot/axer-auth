@@ -2,6 +2,7 @@ import dotenv from "dotenv";
 dotenv.config();
 const token = process.env.DISCORD_BOT_TOKEN;
 import "colors";
+import "./helpers/startConnection";
 import { Client, Intents, Message } from "discord.js";
 import { consoleCheck } from "./logger";
 import express from "express";
@@ -9,6 +10,7 @@ import path from "path";
 dotenv.config();
 import getVerification from "./helpers/getVerification";
 import validateUser from "./helpers/validateUser";
+
 import ".";
 
 const bot = new Client({
