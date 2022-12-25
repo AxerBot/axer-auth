@@ -37,7 +37,6 @@ export async function sendVerifiedEmbed(
 		.addField(
 			"osu! profile",
 			`[${user.username}](https://osu.ppy.sh/users/${user.id})`,
-			true
 		)
 		.addField(
 			"Ranks",
@@ -53,9 +52,7 @@ export async function sendVerifiedEmbed(
 					? user.statistics?.country_rank
 					: "-"
 			}`,
-			true
 		)
-		.addField("\u200b", "\u200b", true)
 		.addField(
 			"Beatmap statistics",
 			`🗺️ ${totalMapsets} ✅ ${
@@ -66,11 +63,11 @@ export async function sendVerifiedEmbed(
 				Number(user.graveyard_beatmapset_count)
 			} 💭 ${user.nominated_beatmapset_count}
             `,
-			true
 		)
-		.addField("User group(s)", usergroups ? usergroups : "-", true)
 		.setThumbnail(user.avatar_url)
 		.setColor("#07f472");
+
+        usergroups ? embed.addField("User group(s)", usergroups) : null;
 
 	const verificationChannel: any = await guild.client.channels.fetch(
 		guild_db.verification.channel

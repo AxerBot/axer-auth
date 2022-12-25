@@ -7,8 +7,8 @@
   "license": "MIT",
   "scripts": {
     "start": "ts-node .",
-    "test:verification": "ts-node ./tests/testVerification.ts",
-    "test:verification-normal": "ts-node ./tests/testVerificationNormalUser.ts"
+    "test:verif": "ts-node ./tests/testVerification.ts",
+    "test:verif-normal": "ts-node ./tests/testVerificationNormalUser.ts"
   },
   "dependencies": {
     "@types/express": "^4.17.13",
