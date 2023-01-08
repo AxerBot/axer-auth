@@ -36,22 +36,27 @@ export async function sendVerifiedEmbed(
 		.setDescription(`Welcome to **${guild.name}**!`)
 		.addField(
 			"osu! profile",
-			`[${user.username}](https://osu.ppy.sh/users/${user.id})`,
+			`[${user.username}](https://osu.ppy.sh/users/${user.id})`
 		)
 		.addField(
 			"Ranks",
 			`${getEmoji(user.playmode.toString())} 🌎 #${
 				user.statistics?.global_rank
-					? user.statistics?.global_rank
+					? user.statistics?.global_rank.toLocaleString("en-US")
 					: "-"
-			} (${user.statistics?.pp ? Math.round(user.statistics?.pp) : "-"}pp)
+			} (${
+				user.statistics?.pp
+					? Math.round(user.statistics?.pp).toLocaleString("en-US") +
+					  "pp"
+					: "-"
+			})
             ${getEmoji(
 				user.playmode.toString()
 			)} :flag_${user.country_code.toLowerCase()}: #${
 				user.statistics?.country_rank
-					? user.statistics?.country_rank
+					? user.statistics?.country_rank.toLocaleString("en-US")
 					: "-"
-			}`,
+			}`
 		)
 		.addField(
 			"Beatmap statistics",
@@ -62,12 +67,12 @@ export async function sendVerifiedEmbed(
 				Number(user.pending_beatmapset_count) +
 				Number(user.graveyard_beatmapset_count)
 			} 💭 ${user.nominated_beatmapset_count}
-            `,
+            `
 		)
 		.setThumbnail(user.avatar_url)
 		.setColor("#07f472");
 
-        usergroups ? embed.addField("User group(s)", usergroups) : null;
+	usergroups ? embed.addField("User group(s)", usergroups) : null;
 
 	const verificationChannel: any = await guild.client.channels.fetch(
 		guild_db.verification.channel
