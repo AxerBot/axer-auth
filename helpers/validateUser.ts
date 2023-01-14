@@ -51,6 +51,12 @@ export default async (req: Request, res: Response) => {
 			message: osuUser.message,
 		});
 
+	if (osuUser.data.is_restricted)
+		return res.status(401).send({
+			status: 401,
+			message: "You're restricted.",
+		});
+
 	const requirements = await validateServerRequirements(
 		osuUser.data,
 		verification_data.guild,
