@@ -70,6 +70,8 @@ export default async (
 			usergroup: UserGroup,
 			probationary: boolean
 		) {
+			if (!guild_db) return;
+
 			console.log(`adding ${role}`);
 			const configuration =
 				guild_db.verification.targets.group_roles.find(
@@ -137,6 +139,8 @@ export default async (
 		 */
 
 		function addRankRoles() {
+			if (!guild_db) return;
+
 			const roles = guild_db.verification.targets.rank_roles;
 
 			if (!roles || roles.length == 0)
