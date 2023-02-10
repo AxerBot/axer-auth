@@ -31,22 +31,22 @@ bot.login(token).then(() => {
 
 	const server = express();
 
-	server.get("*", (req, res) => {
-		if (
-			req.headers["user-agent"] ==
-			"Mozilla/5.0 (compatible; Discordbot/2.0; +https://discordapp.com)"
-		)
-			return res.status(200).send(`<html lang="en">
-        <head>
-          <meta charset="UTF-8" />
-          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-          <meta property="og:title" content="AxerBot Verification">
-          <meta property="og:site_name" content="AxerBot">
-          <meta content="#f45592" data-react-helmet="true" name="theme-color" />
-          <meta property="og:type" content="profile">
-        </head>
-      </html>`);
-	});
+	// server.get("*", (req, res) => {
+	// 	if (
+	// 		req.headers["user-agent"] ==
+	// 		"Mozilla/5.0 (compatible; Discordbot/2.0; +https://discordapp.com)"
+	// 	)
+	// 		return res.status(200).send(`<html lang="en">
+	//     <head>
+	//       <meta charset="UTF-8" />
+	//       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	//       <meta property="og:title" content="AxerBot Verification">
+	//       <meta property="og:site_name" content="AxerBot">
+	//       <meta content="#f45592" data-react-helmet="true" name="theme-color" />
+	//       <meta property="og:type" content="profile">
+	//     </head>
+	//   </html>`);
+	// });
 
 	server.use(
 		"/static",
